@@ -40,15 +40,37 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // Dummy lawyer data for demonstration
   List<Map<String, dynamic>> _lawyers = [
     {
-      'name': 'John Doe',
+      'name': 'Rajesh Sharma',
       'specialization': 'Criminal Defense',
       'experience': '8 Years',
       'hourlyRate': '₹200/min',
     },
-    // Add more lawyer data here
+    {
+      'name': 'Priya Patel',
+      'specialization': 'Family Law',
+      'experience': '6 Years',
+      'hourlyRate': '₹150/min',
+    },
+    {
+      'name': 'Vikram Singh',
+      'specialization': 'Personal Injury',
+      'experience': '10 Years',
+      'hourlyRate': '₹250/min',
+    },
+    {
+      'name': 'Aisha Khan',
+      'specialization': 'Real Estate Law',
+      'experience': '5 Years',
+      'hourlyRate': '₹180/min',
+    },
+    {
+      'name': 'Neha Gupta',
+      'specialization': 'Corporate Law',
+      'experience': '7 Years',
+      'hourlyRate': '₹220/min',
+    },
   ];
 
   int _selectedIndex = 0;
@@ -112,28 +134,13 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Available Lawyers:', // Updated section title
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 20),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _lawyers.length,
-                itemBuilder: (context, index) {
-                  return _buildLawyerCard(_lawyers[index]);
-                },
-              ),
-            ),
-          ],
-        ),
+      body: _selectedIndex == 0
+          ? HomeScreen()
+          : ListView.builder(
+        itemCount: _lawyers.length,
+        itemBuilder: (context, index) {
+          return _buildLawyerCard(_lawyers[index]);
+        },
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -197,5 +204,48 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'Current Status:', // Updated section title
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          // Add your current status widget here
+          SizedBox(height: 20),
+          Text(
+            'Next Court Date: 25th April 2024',
+            style: TextStyle(fontSize: 16),
+          ),
+          SizedBox(height: 10),
+          Text(
+            'Case Details:',
+            style: TextStyle(fontSize: 16),
+          ),
+          Text(
+            'The plaintiff, John Smith, is suing the defendant, Jane Jones, for damages resulting from a car accident.',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 14),
+          ),
+          SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () {
+              // Implement functionality
+            },
+            child: Text('View Documents'),
+          ),
+        ],
+      ),
+    );
   }
 }
