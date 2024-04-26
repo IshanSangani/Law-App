@@ -40,7 +40,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Map<String, dynamic>> _lawyers = [
+   final List<Map<String, dynamic>> _lawyers = [
     {
       'name': 'Rajesh Sharma',
       'specialization': 'Criminal Defense',
@@ -101,15 +101,15 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: Colors.blueGrey[800],
                     ),
                   ),
-                  SizedBox(height: 10),
-                  Text(
+                  const SizedBox(height: 10),
+                  const Text(
                     'John Doe', // Update with user's name or remove
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                     ),
                   ),
-                  Text(
+                  const Text(
                     'Lawyer', // Update with user's role or remove
                     style: TextStyle(
                       color: Colors.white,
@@ -120,13 +120,13 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             ListTile(
-              title: Text('Add Lawyer'), // Updated drawer item
+              title: const Text('Add Lawyer'), // Updated drawer item
               onTap: () {
                 _showAddLawyerDialog(context); // Implement functionality
               },
             ),
             ListTile(
-              title: Text('Lawyer List'), // Updated drawer item
+              title: const Text('Lawyer List'), // Updated drawer item
               onTap: () {
                 // Implement functionality
               },
@@ -135,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       body: _selectedIndex == 0
-          ? HomeScreen()
+          ? const HomeScreen()
           : ListView.builder(
         itemCount: _lawyers.length,
         itemBuilder: (context, index) {
@@ -166,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildLawyerCard(Map<String, dynamic> lawyerData) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       elevation: 5,
       child: ListTile(
         leading: CircleAvatar(
@@ -190,7 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onPressed: () {
             // Implement consultation functionality
           },
-          child: Text('Consult'),
+          child: const Text('Consult'),
         ),
       ),
     );
@@ -208,13 +208,15 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text(
+          const Text(
             'Current Status:', // Updated section title
             style: TextStyle(
               fontSize: 20,
@@ -222,27 +224,27 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           // Add your current status widget here
-          SizedBox(height: 20),
-          Text(
+          const SizedBox(height: 20),
+          const Text(
             'Next Court Date: 25th April 2024',
             style: TextStyle(fontSize: 16),
           ),
-          SizedBox(height: 10),
-          Text(
+          const SizedBox(height: 10),
+          const Text(
             'Case Details:',
             style: TextStyle(fontSize: 16),
           ),
-          Text(
+          const Text(
             'The plaintiff, John Smith, is suing the defendant, Jane Jones, for damages resulting from a car accident.',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 14),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           ElevatedButton(
             onPressed: () {
               // Implement functionality
             },
-            child: Text('View Documents'),
+            child: const Text('View Documents'),
           ),
         ],
       ),
