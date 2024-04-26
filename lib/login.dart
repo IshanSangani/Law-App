@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:law_app/sign_up.dart';
+import 'package:law_app/user.dart'; // Importing user.dart
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key});
@@ -43,9 +43,9 @@ class LoginPage extends StatelessWidget {
                   decoration: InputDecoration(
                     labelText: 'Username',
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                        borderSide:
-                            const BorderSide(color: Colors.grey, width: 1.0)),
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 15.0),
@@ -54,20 +54,22 @@ class LoginPage extends StatelessWidget {
                   decoration: InputDecoration(
                     labelText: 'Password',
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                        borderSide:
-                            const BorderSide(color: Colors.grey, width: 1.0)),
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 15.0),
                 ElevatedButton(
                   onPressed: () {
-                    // Add your authentication logic here
-                    // This button is just for demonstration
+                    // Navigate to user.dart when the login button is clicked
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const  MyHomePage(title: 'Lawyer Consultation Home')),
+                    );
                   },
                   style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.blue),
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
                   ),
                   child: const Text(
                     'Login',
@@ -77,10 +79,10 @@ class LoginPage extends StatelessWidget {
                 const SizedBox(height: 10.0),
                 TextButton(
                   onPressed: () {
+                    // Navigate to user.dart when the "Create an Account" button is clicked
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => const UserTypeSelection()),
+                      MaterialPageRoute(builder: (context) => const  MyHomePage(title: 'Lawyer Consultation Home')),
                     );
                   },
                   child: const Text('Create an Account'),

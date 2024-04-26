@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'chatbot.dart'; // Import the chatbot_screen.dart file
 
-void main() {
-  runApp(const MyApp());
-}
+
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key});
@@ -40,7 +39,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-   final List<Map<String, dynamic>> _lawyers = [
+  final List<Map<String, dynamic>> _lawyers = [
     {
       'name': 'Rajesh Sharma',
       'specialization': 'Criminal Defense',
@@ -80,6 +79,17 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.chat), // Chatbot icon
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChatBotScreen()),
+              );
+            },
+          ),
+        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -137,11 +147,11 @@ class _MyHomePageState extends State<MyHomePage> {
       body: _selectedIndex == 0
           ? const HomeScreen()
           : ListView.builder(
-        itemCount: _lawyers.length,
-        itemBuilder: (context, index) {
-          return _buildLawyerCard(_lawyers[index]);
-        },
-      ),
+              itemCount: _lawyers.length,
+              itemBuilder: (context, index) {
+                return _buildLawyerCard(_lawyers[index]);
+              },
+            ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -208,7 +218,7 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -251,3 +261,4 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
