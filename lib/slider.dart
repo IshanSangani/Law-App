@@ -65,10 +65,10 @@ class _SliderScreenState extends State<SliderScreen> {
           );
         }).toList(),
         onSkipPress: () {
-          _navigateToUserTypeSelection();
+          _navigateToLogin();
         },
         onDonePress: () {
-          _navigateToUserTypeSelection();
+          _navigateToLogin();
         },
         onNextPress: () {
           if (currentIndex < slides.length - 1) {
@@ -85,10 +85,10 @@ class _SliderScreenState extends State<SliderScreen> {
     );
   }
 
-  void _navigateToUserTypeSelection() {
+  void _navigateToLogin() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const UserTypeSelectionScreen()),
+      MaterialPageRoute(builder: (context) => const LoginPage()),
     );
   }
 }
