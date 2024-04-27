@@ -153,7 +153,7 @@ class _LawyersListScreenState extends State<LawyersListScreen> {
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const ChatBotScreen()),
+                MaterialPageRoute(builder: (context) =>  ChatBotScreen()),
               );
               break;
             case 3:

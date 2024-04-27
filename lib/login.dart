@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:law_app/lawyers.dart'; // Importing user.dart
+import 'package:law_app/court.dart'; // Importing user.dart
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key});
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  String? _selectedRole;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +45,110 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedRole = 'user';
+                          });
+                        },
+                        child: Card(
+                          elevation: 3,
+                          color: _selectedRole == 'user' ? Colors.blue : Colors.white,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.person,
+                                  color: _selectedRole == 'user' ? Colors.white : Colors.blue,
+                                ),
+                                const SizedBox(height: 8.0),
+                                Text(
+                                  'User',
+                                  style: TextStyle(
+                                    color: _selectedRole == 'user' ? Colors.white : Colors.blue,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16.0),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedRole = 'lawyer';
+                          });
+                        },
+                        child: Card(
+                          elevation: 3,
+                          color: _selectedRole == 'lawyer' ? Colors.blue : Colors.white,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.gavel,
+                                  color: _selectedRole == 'lawyer' ? Colors.white : Colors.blue,
+                                ),
+                                const SizedBox(height: 8.0),
+                                Text(
+                                  'Lawyer',
+                                  style: TextStyle(
+                                    color: _selectedRole == 'lawyer' ? Colors.white : Colors.blue,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16.0),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedRole = 'court';
+                          });
+                        },
+                        child: Card(
+                          elevation: 3,
+                          color: _selectedRole == 'court' ? Colors.blue : Colors.white,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.gavel,
+                                  color: _selectedRole == 'court' ? Colors.white : Colors.blue,
+                                ),
+                                const SizedBox(height: 8.0),
+                                Text(
+                                  'Court',
+                                  style: TextStyle(
+                                    color: _selectedRole == 'court' ? Colors.white : Colors.blue,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20.0),
                 TextField(
                   decoration: InputDecoration(
                     labelText: 'Username',
@@ -64,12 +174,22 @@ class LoginPage extends StatelessWidget {
                 const SizedBox(height: 15.0),
                 ElevatedButton(
                   onPressed: () {
-                    // Navigate to user.dart when the login button is clicked
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => LawyersListScreen()),
-                    );
+                    if (_selectedRole == 'user') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LawyersListScreen()),
+                      );
+                    } else if (_selectedRole == 'lawyer') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => CourtPOV()),
+                      );
+                    } else if (_selectedRole == 'court') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => CourtPOV()),
+                      );
+                    }
                   },
                   style: ButtonStyle(
                     backgroundColor:
@@ -86,8 +206,7 @@ class LoginPage extends StatelessWidget {
                     // Navigate to user.dart when the "Create an Account" button is clicked
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) =>  LawyersListScreen()),
+                      MaterialPageRoute(builder: (context) => LawyersListScreen()),
                     );
                   },
                   child: const Text('Create an Account'),
