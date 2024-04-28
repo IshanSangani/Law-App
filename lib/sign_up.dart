@@ -1,212 +1,156 @@
 import 'package:flutter/material.dart';
-import 'package:law_app/lawyers.dart'; // Importing user.dart
-import 'package:law_app/court.dart'; // Importing user.dart
-import 'package:law_app/sign_up.dart';
-class SignupPage extends StatefulWidget {
-  @override
-  _SignupPageState createState() => _SignupPageState();
-}
+import 'login.dart';
 
-class _SignupPageState extends State<SignupPage> {
-  String? _selectedRole;
+class SignupPage extends StatelessWidget {
+  const SignupPage({Key? key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Image.asset(
-                  'images/login.jpg', // Adjust the image path as needed
-                  height: 150, // Adjust the image height as needed
-                ),
-                const SizedBox(height: 30.0),
-                const Text(
-                  'Welcome to Law App!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 30.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 10.0),
-                const Text(
-                  'Signup to Continue',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(height: 20.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selectedRole = 'user';
-                          });
-                        },
-                        child: Card(
-                          elevation: 3,
-                          color: _selectedRole == 'user' ? Colors.blue : Colors.white,
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.person,
-                                  color: _selectedRole == 'user' ? Colors.white : Colors.blue,
-                                ),
-                                const SizedBox(height: 8.0),
-                                Text(
-                                  'User',
-                                  style: TextStyle(
-                                    color: _selectedRole == 'user' ? Colors.white : Colors.blue,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16.0),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selectedRole = 'lawyer';
-                          });
-                        },
-                        child: Card(
-                          elevation: 3,
-                          color: _selectedRole == 'lawyer' ? Colors.blue : Colors.white,
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.gavel,
-                                  color: _selectedRole == 'lawyer' ? Colors.white : Colors.blue,
-                                ),
-                                const SizedBox(height: 8.0),
-                                Text(
-                                  'Lawyer',
-                                  style: TextStyle(
-                                    color: _selectedRole == 'lawyer' ? Colors.white : Colors.blue,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16.0),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selectedRole = 'court';
-                          });
-                        },
-                        child: Card(
-                          elevation: 3,
-                          color: _selectedRole == 'court' ? Colors.blue : Colors.white,
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.gavel,
-                                  color: _selectedRole == 'court' ? Colors.white : Colors.blue,
-                                ),
-                                const SizedBox(height: 8.0),
-                                Text(
-                                  'Court',
-                                  style: TextStyle(
-                                    color: _selectedRole == 'court' ? Colors.white : Colors.blue,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20.0),
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Username',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                      borderSide:
-                          const BorderSide(color: Colors.grey, width: 1.0),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 15.0),
-                TextField(
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                      borderSide:
-                          const BorderSide(color: Colors.grey, width: 1.0),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 15.0),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_selectedRole == 'user') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => LawyersListScreen()),
-                      );
-                    } else if (_selectedRole == 'lawyer') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => CourtPOV()),
-                      );
-                    } else if (_selectedRole == 'court') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => CourtPOV()),
-                      );
-                    }
-                  },
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.blue),
-                  ),
-                  child: const Text(
-                    'Signup',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                const SizedBox(height: 10.0),
-               
-              ],
-            ),
-          ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Color.fromARGB(255, 167, 203, 232),
+        appBar: AppBar(
+          title: Text('Create Account'),
+          backgroundColor: Colors.blue,
+        ),
+        body: 
+        SingleChildScrollView(
+          child: SignupForm()
         ),
       ),
     );
   }
+}
+
+class SignupForm extends StatefulWidget {
+  @override
+  _SignupFormState createState() => _SignupFormState();
+}
+
+class _SignupFormState extends State<SignupForm> {
+  final _formKey = GlobalKey<FormState>();
+  late String _username;
+  late String _email;
+  late String _password;
+  late String _confirmPassword;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            TextFormField(
+              decoration: const InputDecoration(labelText: 'Username'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a username';
+                }
+                return null;
+              },
+              onSaved: (value) {
+                _username = value!;
+              },
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              decoration: const InputDecoration(labelText: 'Email'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter an email address';
+                }
+                // Add email validation logic if needed
+                return null;
+              },
+              onSaved: (value) {
+                _email = value!;
+              },
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              decoration: const InputDecoration(labelText: 'Password'),
+              obscureText: true,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a password';
+                }
+                // Add password validation logic if needed
+                return null;
+              },
+              onSaved: (value) {
+                _password = value!;
+              },
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              decoration: const InputDecoration(labelText: 'Confirm Password'),
+              obscureText: true,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please confirm your password';
+                }
+                if (value != _password) {
+                  return 'Passwords do not match';
+                }
+                return null;
+              },
+              onSaved: (value) {
+                _confirmPassword = value!;
+              },
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: //_submitForm,
+                  () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );// only for now directly redirected to login page
+                // after connected with backend _submitForm will be used
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue, // Set button color to blue
+              ),
+              child: const Text(
+                'Create Account',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      // Send user data to the server (e.g., using an HTTP POST request)
+      final success = await _sendUserDataToServer();
+
+      if (success) {
+        // Redirect to the login page
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => LoginPage()),
+        );
+      } else {
+        // Handle error (e.g., display an error message)
+      }
+    }
+  }
+}
+
+// Function to send user data to the server (replace with your actual implementation)
+Future<bool> _sendUserDataToServer() async {
+  // Implement your API call here (e.g., using http package)
+  // Return true if successful, false otherwise
+  // Example: send data to https://your-api.com/signup
+  // ...
+  return true; // Replace with actual response handling
 }
