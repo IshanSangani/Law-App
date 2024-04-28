@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:law_app/user_pov.dart';
+import 'chatbot.dart';
+import 'bottom_nav_bar.dart';
+
+import 'package:flutter/material.dart';
 import 'chatbot.dart';
 import 'bottom_nav_bar.dart';
 
@@ -21,6 +26,8 @@ class Professional {
 }
 
 class LawyersListScreen extends StatefulWidget {
+  const LawyersListScreen({super.key});
+
   @override
   _LawyersListScreenState createState() => _LawyersListScreenState();
 }
@@ -72,29 +79,68 @@ class _LawyersListScreenState extends State<LawyersListScreen> {
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
-              icon: const Icon(Icons.menu), // Hamburger menu icon
+              icon: const Icon(Icons.menu),
               onPressed: () {
-                // Open the side menu (drawer) or perform any other action
-                Scaffold.of(context).openDrawer();
+                Scaffold.of(context).openDrawer(); // Open the side menu
               },
             );
           },
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: () {
-              // Show filter options
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              // Implement search functionality
-            },
-            style: const ButtonStyle(),
-          ),
+        actions: const [
+          // ... (other action buttons)
         ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const UserAccountsDrawerHeader(
+              accountName: Text('Your Name'), // Replace with actual user name
+              accountEmail: Text('your@email.com'), // Replace with actual email
+              currentAccountPicture: CircleAvatar(
+                backgroundImage: AssetImage(
+                    'assets/profile_picture.jpg'), // Replace with actual profile picture
+                backgroundColor: Colors.white,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Profile'),
+              onTap: () {
+                // Navigate to profile screen
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.folder),
+              title:
+                  const Text('Your Filings'), // Add the "Your Filings" option
+              onTap: () {
+                // Implement your filings screen navigation
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CaseDetailsPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
+              onTap: () {
+                // Navigate to settings screen
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.exit_to_app),
+              title: const Text('Logout'),
+              onTap: () {
+                // Implement logout functionality
+              },
+            ),
+          ],
+        ),
       ),
       body: ListView.builder(
         itemCount: professionals.length,
@@ -153,7 +199,7 @@ class _LawyersListScreenState extends State<LawyersListScreen> {
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) =>  ChatBotScreen()),
+                MaterialPageRoute(builder: (context) => const ChatBotScreen()),
               );
               break;
             case 3:

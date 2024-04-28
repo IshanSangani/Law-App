@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:law_app/lawyers.dart'; // Importing user.dart
 import 'package:law_app/court.dart'; // Importing user.dart
-import 'package:law_app/select_user_type.dart';
+import 'package:law_app/sign_up.dart';
+
 import '';
 
 class LoginPage extends StatefulWidget {
@@ -89,7 +90,8 @@ class _LoginPageState extends State<LoginPage> {
                     // Navigate to user.dart when the "Create an Account" button is clicked
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const SelectUserType()),
+                      MaterialPageRoute(
+                          builder: (context) =>  Registration()),
                     );
                   },
                   child: const Text('Create an Account'),

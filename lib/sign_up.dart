@@ -1,156 +1,159 @@
+import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:velocity_x/velocity_x.dart';
+
 import 'login.dart';
+import 'package:http/http.dart' as http;
+import 'config.dart';
 
-class SignupPage extends StatelessWidget {
-  const SignupPage({Key? key});
-
+class Registration extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: Color.fromARGB(255, 167, 203, 232),
-        appBar: AppBar(
-          title: Text('Create Account'),
-          backgroundColor: Colors.blue,
-        ),
-        body: 
-        SingleChildScrollView(
-          child: SignupForm()
-        ),
-      ),
-    );
-  }
+  _RegistrationState createState() => _RegistrationState();
 }
 
-class SignupForm extends StatefulWidget {
-  @override
-  _SignupFormState createState() => _SignupFormState();
-}
+class _RegistrationState extends State<Registration> {
 
-class _SignupFormState extends State<SignupForm> {
-  final _formKey = GlobalKey<FormState>();
-  late String _username;
-  late String _email;
-  late String _password;
-  late String _confirmPassword;
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  bool _isNotValidate = false;
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'Username'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a username';
-                }
-                return null;
-              },
-              onSaved: (value) {
-                _username = value!;
-              },
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'Email'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter an email address';
-                }
-                // Add email validation logic if needed
-                return null;
-              },
-              onSaved: (value) {
-                _email = value!;
-              },
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a password';
-                }
-                // Add password validation logic if needed
-                return null;
-              },
-              onSaved: (value) {
-                _password = value!;
-              },
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'Confirm Password'),
-              obscureText: true,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please confirm your password';
-                }
-                if (value != _password) {
-                  return 'Passwords do not match';
-                }
-                return null;
-              },
-              onSaved: (value) {
-                _confirmPassword = value!;
-              },
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: //_submitForm,
-                  () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
-                );// only for now directly redirected to login page
-                // after connected with backend _submitForm will be used
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue, // Set button color to blue
-              ),
-              child: const Text(
-                'Create Account',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  void registerUser() async{
+    if(emailController.text.isNotEmpty && passwordController.text.isNotEmpty){
 
-  void _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
+      var regBody = {
+        "email":emailController.text,
+        "password":passwordController.text
+      };
 
-      // Send user data to the server (e.g., using an HTTP POST request)
-      final success = await _sendUserDataToServer();
+      var response = await http.post(Uri.parse(registration),
+      headers: {"Content-Type":"application/json"},
+      body: jsonEncode(regBody)
+      );
 
-      if (success) {
-        // Redirect to the login page
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => LoginPage()),
-        );
-      } else {
-        // Handle error (e.g., display an error message)
+      var jsonResponse = jsonDecode(response.body);
+
+      print(jsonResponse['status']);
+
+      if(jsonResponse['status']){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
+      }else{
+        print("SomeThing Went Wrong");
       }
+    }else{
+      setState(() {
+        _isNotValidate = true;
+      });
     }
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+                colors: [const Color(0XFFF95A3B),const Color(0XFFF96713)],
+                begin: FractionalOffset.topLeft,
+                end: FractionalOffset.bottomCenter,
+                stops: [0.0,0.8],
+                tileMode: TileMode.mirror
+            ),
+          ),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  
+                  HeightBox(10),
+                  "CREATE YOUR ACCOUNT".text.size(22).yellow100.make(),
+                  TextField(
+                    controller: emailController,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        errorStyle: TextStyle(color: Colors.white),
+                        errorText: _isNotValidate ? "Enter Proper Info" : null,
+                        hintText: "Email",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10.0)))),
+                  ).p4().px24(),
+                  TextField(
+                    controller: passwordController,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                        suffixIcon: IconButton(icon: Icon(Icons.copy),onPressed: (){
+                          final data = ClipboardData(text: passwordController.text);
+                          Clipboard.setData(data);
+                        },),
+                        prefixIcon: IconButton(icon: Icon(Icons.password),onPressed: (){
+                          String passGen =  generatePassword();
+                          passwordController.text = passGen;
+                          setState(() {
+
+                          });
+                        },),
+                        filled: true,
+                        fillColor: Colors.white,
+                        errorStyle: TextStyle(color: Colors.white),
+                        errorText: _isNotValidate ? "Enter Proper Info" : null,
+                        hintText: "Password",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10.0)))),
+                  ).p4().px24(),
+                  HStack([
+                    GestureDetector(
+                      onTap: ()=>{
+                        registerUser()
+                      },
+                        child: VxBox(child: "Register".text.white.makeCentered().p16()).green600.roundedLg.make().px16().py16(),
+                    ),
+                  ]),
+                  GestureDetector(
+                    onTap: (){
+                      print("Sign In");
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
+                    },
+                    child: HStack([
+                      "Already Registered?".text.make(),
+                      " Sign In".text.white.make()
+                    ]).centered(),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
-// Function to send user data to the server (replace with your actual implementation)
-Future<bool> _sendUserDataToServer() async {
-  // Implement your API call here (e.g., using http package)
-  // Return true if successful, false otherwise
-  // Example: send data to https://your-api.com/signup
-  // ...
-  return true; // Replace with actual response handling
+String generatePassword() {
+  String upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  String lower = 'abcdefghijklmnopqrstuvwxyz';
+  String numbers = '1234567890';
+  String symbols = '!@#\$%^&*()<>,./';
+
+  String password = '';
+
+  int passLength = 20;
+
+  String seed = upper + lower + numbers + symbols;
+
+  List<String> list = seed.split('').toList();
+
+  Random rand = Random();
+
+  for (int i = 0; i < passLength; i++) {
+    int index = rand.nextInt(list.length);
+    password += list[index];
+  }
+  return password;
 }

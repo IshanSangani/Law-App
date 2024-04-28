@@ -32,8 +32,8 @@ dependencies:
     sdk: flutter
   intro_slider: ^4.2.1
   webview_flutter: ^3.0.0
-
- 
+  http: ^0.13.3
+  velocity_x: ^4.1.2
 
   
 
