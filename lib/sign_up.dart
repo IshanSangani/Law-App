@@ -8,46 +8,68 @@ import 'login.dart';
 import 'package:http/http.dart' as http;
 import 'config.dart';
 
-class Registration extends StatefulWidget {
+class SignUpPage extends StatefulWidget {
   @override
-  _RegistrationState createState() => _RegistrationState();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _RegistrationState extends State<Registration> {
-
+class _SignUpPageState extends State<SignUpPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool _isNotValidate = false;
+  String? _selectedRole;
 
-  void registerUser() async{
-    if(emailController.text.isNotEmpty && passwordController.text.isNotEmpty){
-
+  void registerUser() async {
+  try {
+    if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty && _selectedRole != null) {
       var regBody = {
-        "email":emailController.text,
-        "password":passwordController.text
+        "email": emailController.text,
+        "password": passwordController.text,
+        "role": _selectedRole, // Pass the selected role
       };
 
-      var response = await http.post(Uri.parse(registration),
-      headers: {"Content-Type":"application/json"},
-      body: jsonEncode(regBody)
+      var response = await http.post(
+        Uri.parse(registration),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(regBody),
       );
 
-      var jsonResponse = jsonDecode(response.body);
-
-      print(jsonResponse['status']);
-
-      if(jsonResponse['status']){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
-      }else{
-        print("SomeThing Went Wrong");
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        if (jsonResponse['status']) {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+        } else {
+          // Display the error message from the backend
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(jsonResponse['message']),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } else {
+        // Display a generic error message
+        var errorMessage = 'Something went wrong. Please try again.';
+        if (response.body.isNotEmpty) {
+          var jsonResponse = jsonDecode(response.body);
+          errorMessage = jsonResponse['message'] ?? errorMessage;
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
-    }else{
+    } else {
       setState(() {
         _isNotValidate = true;
       });
     }
+  } catch (e) {
+    print("Error: $e");
   }
-
+}
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -57,11 +79,11 @@ class _RegistrationState extends State<Registration> {
           height: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-                colors: [const Color(0XFFF95A3B),const Color(0XFFF96713)],
-                begin: FractionalOffset.topLeft,
-                end: FractionalOffset.bottomCenter,
-                stops: [0.0,0.8],
-                tileMode: TileMode.mirror
+              colors: [Color.fromARGB(255, 201, 198, 197), Color.fromARGB(255, 184, 182, 180)],
+              begin: FractionalOffset.topLeft,
+              end: FractionalOffset.bottomCenter,
+              stops: [0.0, 0.8],
+              tileMode: TileMode.mirror,
             ),
           ),
           child: Center(
@@ -69,62 +91,176 @@ class _RegistrationState extends State<Registration> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  
                   HeightBox(10),
                   "CREATE YOUR ACCOUNT".text.size(22).yellow100.make(),
+                  // Cards for user, lawyer, and court selection
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // User card
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedRole = 'user';
+                            });
+                          },
+                          child: Card(
+                            elevation: 3,
+                            color: _selectedRole == 'user' ? Colors.blue : Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.person,
+                                    color: _selectedRole == 'user' ? Colors.white : Colors.blue,
+                                  ),
+                                  const SizedBox(height: 8.0),
+                                  Text(
+                                    'User',
+                                    style: TextStyle(
+                                      color: _selectedRole == 'user' ? Colors.white : Colors.blue,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16.0),
+                      // Lawyer card
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedRole = 'lawyer';
+                            });
+                          },
+                          child: Card(
+                            elevation: 3,
+                            color: _selectedRole == 'lawyer' ? Colors.blue : Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.gavel,
+                                    color: _selectedRole == 'lawyer' ? Colors.white : Colors.blue,
+                                  ),
+                                  const SizedBox(height: 8.0),
+                                  Text(
+                                    'Lawyer',
+                                    style: TextStyle(
+                                      color: _selectedRole == 'lawyer' ? Colors.white : Colors.blue,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16.0),
+                      // Court card
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedRole = 'court';
+                            });
+                          },
+                          child: Card(
+                            elevation: 3,
+                            color: _selectedRole == 'court' ? Colors.blue : Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.gavel,
+                                    color: _selectedRole == 'court' ? Colors.white : Colors.blue,
+                                  ),
+                                  const SizedBox(height: 8.0),
+                                  Text(
+                                    'Court',
+                                    style: TextStyle(
+                                      color: _selectedRole == 'court' ? Colors.white : Colors.blue,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 15.0),
+                  // Email and password fields
                   TextField(
                     controller: emailController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        errorStyle: TextStyle(color: Colors.white),
-                        errorText: _isNotValidate ? "Enter Proper Info" : null,
-                        hintText: "Email",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10.0)))),
+                      filled: true,
+                      fillColor: Colors.white,
+                      errorStyle: TextStyle(color: Colors.white),
+                      errorText: _isNotValidate ? "Enter Proper Info" : null,
+                      hintText: "Email",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      ),
+                    ),
                   ).p4().px24(),
                   TextField(
                     controller: passwordController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
-                        suffixIcon: IconButton(icon: Icon(Icons.copy),onPressed: (){
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.copy),
+                        onPressed: () {
                           final data = ClipboardData(text: passwordController.text);
                           Clipboard.setData(data);
-                        },),
-                        prefixIcon: IconButton(icon: Icon(Icons.password),onPressed: (){
-                          String passGen =  generatePassword();
+                        },
+                      ),
+                      prefixIcon: IconButton(
+                        icon: Icon(Icons.password),
+                        onPressed: () {
+                          String passGen = generatePassword();
                           passwordController.text = passGen;
-                          setState(() {
-
-                          });
-                        },),
-                        filled: true,
-                        fillColor: Colors.white,
-                        errorStyle: TextStyle(color: Colors.white),
-                        errorText: _isNotValidate ? "Enter Proper Info" : null,
-                        hintText: "Password",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10.0)))),
+                          setState(() {});
+                        },
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      errorStyle: TextStyle(color: Colors.white),
+                      errorText: _isNotValidate ? "Enter Proper Info" : null,
+                      hintText: "Password",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      ),
+                    ),
                   ).p4().px24(),
                   HStack([
                     GestureDetector(
-                      onTap: ()=>{
-                        registerUser()
-                      },
-                        child: VxBox(child: "Register".text.white.makeCentered().p16()).green600.roundedLg.make().px16().py16(),
+                      onTap: () => registerUser(),
+                      child: VxBox(child: "Register".text.white.makeCentered().p16()).green600.roundedLg.make().px16().py16(),
                     ),
                   ]),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       print("Sign In");
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
                     },
                     child: HStack([
                       "Already Registered?".text.make(),
-                      " Sign In".text.white.make()
+                      " Sign In".text.white.make(),
                     ]).centered(),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -133,27 +269,24 @@ class _RegistrationState extends State<Registration> {
       ),
     );
   }
-}
 
-String generatePassword() {
-  String upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  String lower = 'abcdefghijklmnopqrstuvwxyz';
-  String numbers = '1234567890';
-  String symbols = '!@#\$%^&*()<>,./';
+  String generatePassword() {
+    String upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    String lower = 'abcdefghijklmnopqrstuvwxyz';
+    String numbers = '1234567890';
+    String symbols = '!@#\$%^&*()<>,./';
 
-  String password = '';
+    String password = '';
+    int passLength = 20;
+    String seed = upper + lower + numbers + symbols;
 
-  int passLength = 20;
+    List<String> list = seed.split('').toList();
+    Random rand = Random();
 
-  String seed = upper + lower + numbers + symbols;
-
-  List<String> list = seed.split('').toList();
-
-  Random rand = Random();
-
-  for (int i = 0; i < passLength; i++) {
-    int index = rand.nextInt(list.length);
-    password += list[index];
+    for (int i = 0; i < passLength; i++) {
+      int index = rand.nextInt(list.length);
+      password += list[index];
+    }
+    return password;
   }
-  return password;
 }
