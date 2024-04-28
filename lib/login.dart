@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:law_app/lawyers.dart'; // Importing user.dart
 import 'package:law_app/court.dart'; // Importing user.dart
-
+import 'package:law_app/sign_up.dart';
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -206,7 +206,7 @@ class _LoginPageState extends State<LoginPage> {
                     // Navigate to user.dart when the "Create an Account" button is clicked
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => LawyersListScreen()),
+                      MaterialPageRoute(builder: (context) => SignupPage()),
                     );
                   },
                   child: const Text('Create an Account'),
