@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:intl/intl.dart'; // Import the intl package
+import 'config.dart';
 
 class CourtPOV extends StatefulWidget {
   @override
@@ -6,18 +10,62 @@ class CourtPOV extends StatefulWidget {
 }
 
 class _CourtPOVState extends State<CourtPOV> {
-  // Example list of hearing events
-  final List<HearingEvent> hearingEvents = [
-    HearingEvent('Case 1', 'John Doe', DateTime(2023, 4, 27, 10, 30), EventType.user, Priority.high, 'Civil'),
-    HearingEvent('Case 2', 'Jane Smith', DateTime(2023, 4, 27, 14, 15), EventType.user, Priority.medium, 'Criminal'),
-    HearingEvent('Case 3', 'Emily Johnson', DateTime(2023, 4, 27, 16, 45), EventType.user, Priority.low, 'Family'),
-  ];
+  List<HearingEvent> hearingEvents = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchHearingEvents();
+  }
+
+  Future<void> fetchHearingEvents() async {
+    try {
+      final response = await http.post(Uri.parse(getcaselistUrl));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        final List<dynamic> successData = data['success'];
+        setState(() {
+          hearingEvents = successData
+              .map((event) => HearingEvent(
+                  event['caseType'],
+                  event['petitionerName'],
+                  DateTime.parse(event['hearingDate']),
+                  getPriorityFromString(event['priority'])))
+              .toList();
+        });
+      } else {
+        throw Exception('Failed to fetch hearing events');
+      }
+    } catch (error) {
+      print('Error fetching hearing events: $error');
+    }
+  }
+
+  Priority getPriorityFromString(String priority) {
+    switch (priority) {
+      case 'High':
+        return Priority.high;
+      case 'Medium':
+        return Priority.medium;
+      case 'Low':
+        return Priority.low;
+      default:
+        return Priority.low;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Court Perspective'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: fetchHearingEvents,
+          ),
+        ],
       ),
       body: ListView.builder(
         itemCount: hearingEvents.length,
@@ -29,23 +77,17 @@ class _CourtPOVState extends State<CourtPOV> {
             elevation: 3,
             margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: priorityColor,
-                child: _getEventTypeIcon(hearingEvent.type),
-                foregroundColor: Colors.white,
-              ),
-              title: Text('${hearingEvent.caseName} - ${hearingEvent.userName}'),
+              title: Text('Case Type: ${hearingEvent.caseType}'),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Category: ${hearingEvent.category}'),
-                  Text('Priority: $priorityText', style: TextStyle(color: priorityColor)),
-                  Text('Date: ${hearingEvent.date.toString()}'),
+                  Text('Priority: $priorityText',
+                      style: TextStyle(color: priorityColor)),
+                  Text('Petitioner Name: ${hearingEvent.petitionerName}'),
+                  Text(
+                      'Hearing Date: ${DateFormat('yyyy-MM-dd').format(hearingEvent.date)}'), // Use DateFormat here
                 ],
               ),
-              onTap: () {
-                // Handle tapping on a hearing event
-              },
             ),
           );
         },
@@ -53,7 +95,6 @@ class _CourtPOVState extends State<CourtPOV> {
     );
   }
 
-  // Helper method to get color based on priority
   Color _getPriorityColor(Priority priority) {
     switch (priority) {
       case Priority.high:
@@ -65,7 +106,6 @@ class _CourtPOVState extends State<CourtPOV> {
     }
   }
 
-  // Helper method to get priority text based on priority
   String _getPriorityText(Priority priority) {
     switch (priority) {
       case Priority.high:
@@ -76,27 +116,15 @@ class _CourtPOVState extends State<CourtPOV> {
         return 'Low';
     }
   }
-
-  // Helper method to get icon based on event type
-  Icon _getEventTypeIcon(EventType type) {
-    return type == EventType.user ? Icon(Icons.person) : Icon(Icons.gavel);
-  }
 }
 
-// Define the Priority enum
-enum Priority { high, medium, low }
-
-// Define the EventType enum
-enum EventType { user, court }
-
-// Define the HearingEvent class
 class HearingEvent {
-  final String caseName;
-  final String userName;
+  final String caseType;
+  final String petitionerName;
   final DateTime date;
-  final EventType type;
   final Priority priority;
-  final String category;
 
-  HearingEvent(this.caseName, this.userName, this.date, this.type, this.priority, this.category);
+  HearingEvent(this.caseType, this.petitionerName, this.date, this.priority);
 }
+
+enum Priority { high, medium, low }

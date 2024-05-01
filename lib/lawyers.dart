@@ -132,7 +132,7 @@ class _LawyersListScreenState extends State<LawyersListScreen> {
                 // Implement your filings screen navigation
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CaseDetailsPage()),
+                  MaterialPageRoute(builder: (context) => CaseDetailsPage(emailController: widget.emailController,)),
                 );
               },
             ),

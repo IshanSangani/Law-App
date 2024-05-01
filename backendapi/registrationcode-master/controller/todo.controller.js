@@ -133,3 +133,36 @@ async function findNextAvailableDate(currentDate, daysToAdd) {
         return nextDate; // Return the next available date
     }
 }
+
+exports.getCaseDetails = async (req, res) => {
+    try {
+      // Extract email from request body
+      const { email } = req.body;
+  
+      // Fetch case details from MongoDB based on petitioneremail
+      const caseDetails = await ToDoService.getCaseDetailsByEmail(email);
+  
+      if (!caseDetails) {
+        res.status(404).json({ message: "Case details not found" });
+        return;
+      }
+  
+      res.status(200).json(caseDetails);
+    } catch (error) {
+      console.error("Error fetching case details:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+exports.getCaseList = async (req, res, next) => {
+    try {
+        // Call the ToDoService method to get the case list
+        const caseList = await ToDoService.getCaseList();
+
+        // Send the case list as a response
+        res.json({ status: true, success: caseList });
+    } catch (error) {
+        console.error("Error fetching case list:", error);
+        next(error); // Pass the error to the error handling middleware
+    }
+};
