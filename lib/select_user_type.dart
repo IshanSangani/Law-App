@@ -163,19 +163,19 @@ class _SelectUserTypeState extends State<SelectUserType> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const SignupPage()),
+                            builder: (context) =>  SignUpPage()),
                       );
                     } else if (_selectedRole == 'lawyer') {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const SignupPage()),
+                            builder: (context) =>  SignUpPage()),
                       );
                     } else if (_selectedRole == 'court') {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const SignupPage()),
+                            builder: (context) => SignUpPage()),
                       );
                     }
                   },

@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:law_app/user_pov.dart';
 import 'chatbot.dart';
 import 'bottom_nav_bar.dart';
-
-import 'package:flutter/material.dart';
-import 'chatbot.dart';
-import 'bottom_nav_bar.dart';
+import 'petitioner_form.dart';
 
 class Professional {
   final String name;
@@ -111,6 +108,18 @@ class _LawyersListScreenState extends State<LawyersListScreen> {
               title: const Text('Profile'),
               onTap: () {
                 // Navigate to profile screen
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.folder),
+              title: const Text('File Case'), // Add the "Your Filings" option
+              onTap: () {
+                // Implement your filings screen navigation
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const PetitionerForm()),
+                );
               },
             ),
             ListTile(

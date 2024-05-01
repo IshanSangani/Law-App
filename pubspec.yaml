@@ -34,6 +34,7 @@ dependencies:
   webview_flutter: ^3.0.0
   http: ^0.13.3
   velocity_x: ^4.1.2
+  file_picker: ^8.0.3
 
   
 
