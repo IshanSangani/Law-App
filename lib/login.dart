@@ -56,15 +56,16 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _navigateToRoleScreen(String role) {
+    final email = _emailController.text.trim();
     if (role == 'lawyer') {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => LawyerScreen()),
+        MaterialPageRoute(builder: (context) => LawyerScreen( emailController: _emailController)),
       );
     } else if (role == 'user') {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => LawyersListScreen()),
+        MaterialPageRoute(builder: (context) => LawyersListScreen(emailController: _emailController)),
       );
     } else if (role == 'court') {
       Navigator.push(

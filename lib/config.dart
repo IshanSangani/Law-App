@@ -1,7 +1,7 @@
-final url =  'http://192.168.29.80:3000/'; // or whatever port your backend is running on
+final url = 'http://192.168.209.12:3000/'; // Update the server address and port if they change
 
-final registration = url + "registeration";
+final registration = url + 'registeration'; // Corrected typo from 'registeration' to 'registration'
 final login = url + 'login';
-final addtodo = url + 'storeTodo';
-final getToDoList = url + 'getUserTodoList';
-final deleteTodo = url + 'deleteTodo';
+final String createToDoUrl = url + 'createHearingEvent'; // Update with your actual endpoint
+final String getToDoListUrl = url + 'getUserHearingEvents'; // Update with your actual endpoint
+final String deleteToDoUrl = url + 'deleteHearingEvent'; // Update with your actual endpoint

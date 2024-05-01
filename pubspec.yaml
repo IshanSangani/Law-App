@@ -35,7 +35,7 @@ dependencies:
   http: ^0.13.3
   velocity_x: ^4.1.2
   file_picker: ^8.0.3
-
+  table_calendar: ^3.0.0
   
 
   # The following adds the Cupertino Icons font to your application.

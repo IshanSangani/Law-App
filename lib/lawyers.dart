@@ -23,7 +23,9 @@ class Professional {
 }
 
 class LawyersListScreen extends StatefulWidget {
-  const LawyersListScreen({super.key});
+  final TextEditingController emailController;
+
+  const LawyersListScreen({Key? key, required this.emailController}) : super(key: key);
 
   @override
   _LawyersListScreenState createState() => _LawyersListScreenState();
@@ -91,9 +93,9 @@ class _LawyersListScreenState extends State<LawyersListScreen> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const UserAccountsDrawerHeader(
+            UserAccountsDrawerHeader(
               accountName: Text('Your Name'), // Replace with actual user name
-              accountEmail: Text('your@email.com'), // Replace with actual email
+              accountEmail: Text(widget.emailController.text), // Replace with email from the controller
               currentAccountPicture: CircleAvatar(
                 backgroundImage: AssetImage(
                     'assets/profile_picture.jpg'), // Replace with actual profile picture
@@ -118,7 +120,7 @@ class _LawyersListScreenState extends State<LawyersListScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const PetitionerForm()),
+                      builder: (context) => CaseFilingForm(emailController: widget.emailController,)),
                 );
               },
             ),

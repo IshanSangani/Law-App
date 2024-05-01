@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
-// mongoose.set('debug', true);
 
+mongoose.connect('mongodb+srv://ishansangani:Ishan123@cluster0.naowgnd.mongodb.net/lawappusers', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    // Add more options as needed
+})
+.then(() => console.log('MongoDB Connected'))
+.catch(err => console.log('MongoDB Connection Error: ', err));
 
-const connection = mongoose.createConnection(`mongodb+srv://ishansangani:Ishan123@cluster0.naowgnd.mongodb.net/lawappusers`).on('open',()=>{console.log("MongoDB Connected");}).on('error',()=>{
-    console.log("MongoDB Connection error");
-});
-
-module.exports = connection;
+module.exports = mongoose.connection;

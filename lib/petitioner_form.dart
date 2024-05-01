@@ -1,27 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:law_app/respondent_form.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:file_picker/file_picker.dart';
+import 'config.dart';
 
-List<String> list = <String>['', 'Male', 'Female', 'Other'];
+List<String> courtList = ['Supreme Court', 'High Court', 'District Court'];
+String? courtDropdownValue;
 
-class PetitionerForm extends StatefulWidget {
-  const PetitionerForm({Key? key}) : super(key: key);
+class CaseFilingForm extends StatefulWidget {
+  final TextEditingController emailController;
+
+  const CaseFilingForm({Key? key, required this.emailController}) : super(key: key);
 
   @override
-  State<PetitionerForm> createState() => _PetitionerFormState();
+  _CaseFilingFormState createState() => _CaseFilingFormState();
 }
 
-class _PetitionerFormState extends State<PetitionerForm> {
+class _CaseFilingFormState extends State<CaseFilingForm> {
   final _formKey = GlobalKey<FormState>();
-  String selectedGender = '';
-  String dropdownValue = list.first;
+  List<PlatformFile> selectedFiles = [];
 
-  final TextEditingController _mobileController = TextEditingController();
+  final TextEditingController _caseTypeController = TextEditingController();
+  final TextEditingController _petitionerNameController = TextEditingController();
+  final TextEditingController _petitionerAgeController = TextEditingController();
+  final TextEditingController _petitionerLawyerController = TextEditingController();
+  final TextEditingController _petitionerLawyerEmailController = TextEditingController();
+  final TextEditingController _respondentNameController = TextEditingController();
+  final TextEditingController _respondentAgeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Petitioner Details'),
+        title: const Text('Case matter details'),
         backgroundColor: Colors.blue,
       ),
       body: SingleChildScrollView(
@@ -33,83 +44,11 @@ class _PetitionerFormState extends State<PetitionerForm> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 const Text(
-                  'Petitioner details',
+                  'Fill case matter details',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(25.0),
-                  ),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Petitioner Name',
-                      labelStyle: TextStyle(
-                        fontSize: 12,
-                      ),
-                      border: InputBorder.none,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 12.0),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter petitioner name';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(25.0),
-                  ),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Father/Mother/Husband Name',
-                      labelStyle: TextStyle(
-                        fontSize: 12,
-                      ),
-                      border: InputBorder.none,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 12.0),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter father/mother/husband name';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(25.0),
-                  ),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Address',
-                      labelStyle: TextStyle(
-                        fontSize: 12,
-                      ),
-                      border: InputBorder.none,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 12.0),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter address';
-                      }
-                      return null;
-                    },
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -119,20 +58,20 @@ class _PetitionerFormState extends State<PetitionerForm> {
                     borderRadius: BorderRadius.circular(25.0),
                   ),
                   child: DropdownButtonFormField<String>(
-                    value: dropdownValue,
+                    value: courtDropdownValue,
                     onChanged: (String? value) {
                       setState(() {
-                        dropdownValue = value!;
+                        courtDropdownValue = value!;
                       });
                     },
-                    items: list.map((String value) {
+                    items: courtList.map((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
                       );
                     }).toList(),
                     decoration: const InputDecoration(
-                      labelText: 'Select Gender',
+                      labelText: 'Select Court',
                       labelStyle: TextStyle(
                         fontSize: 14,
                       ),
@@ -143,181 +82,238 @@ class _PetitionerFormState extends State<PetitionerForm> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(25.0),
-                  ),
-                  child: TextFormField(
-                    controller: _mobileController,
-                    decoration: const InputDecoration(
-                      labelText: 'Mobile Number',
-                      labelStyle: TextStyle(
-                        fontSize: 12,
-                      ),
-                      border: InputBorder.none,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 12.0),
+                TextFormField(
+                  controller: _caseTypeController,
+                  decoration: const InputDecoration(
+                    labelText: 'Case Type',
+                    labelStyle: TextStyle(
+                      fontSize: 14,
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter mobile number';
-                      }
-                      return null;
-                    },
+                    border: OutlineInputBorder(),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter case type';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 12),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        margin: const EdgeInsets.only(right: 8.0),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                        child: TextFormField(
-                          controller: _mobileController,
-                          decoration: const InputDecoration(
-                            labelText: 'Nationality',
-                            labelStyle: TextStyle(
-                              fontSize: 12,
-                            ),
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(
-                                vertical: 5.0, horizontal: 12.0),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter nationality';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
+                TextFormField(
+                  controller: _petitionerNameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Petitioner Name',
+                    labelStyle: TextStyle(
+                      fontSize: 12,
                     ),
-                    const SizedBox(height: 12),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(25.0),
-                        ),
-                        child: TextFormField(
-                          controller: _mobileController,
-                          decoration: const InputDecoration(
-                            labelText: 'State',
-                            labelStyle: TextStyle(
-                              fontSize: 12,
-                            ),
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(
-                                vertical: 5.0, horizontal: 12.0),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter state';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter petitioner name';
+                    }
+                    return null;
+                  },
                 ),
-                const SizedBox(height: 12,),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _petitionerAgeController,
+                  decoration: const InputDecoration(
+                    labelText: 'Petitioner Age',
+                    labelStyle: TextStyle(
+                      fontSize: 12,
+                    ),
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter petitioner age';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _petitionerLawyerController,
+                  decoration: const InputDecoration(
+                    labelText: 'Petitioner Lawyer Name',
+                    labelStyle: TextStyle(
+                      fontSize: 12,
+                    ),
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter petitioner lawyer name';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _petitionerLawyerEmailController,
+                  decoration: const InputDecoration(
+                    labelText: 'Petitioner Lawyer Email',
+                    labelStyle: TextStyle(
+                      fontSize: 12,
+                    ),
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter petitioner lawyer email';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _respondentNameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Respondent Name',
+                    labelStyle: TextStyle(
+                      fontSize: 12,
+                    ),
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter respondent name';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _respondentAgeController,
+                  decoration: const InputDecoration(
+                    labelText: 'Respondent Age',
+                    labelStyle: TextStyle(
+                      fontSize: 12,
+                    ),
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter respondent age';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 12),
+                ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      FilePickerResult? result =
+                          await FilePicker.platform.pickFiles(
+                        allowMultiple: true,
+                        type: FileType.custom,
+                        allowedExtensions: ['pdf', 'doc', 'docx'],
+                      );
+                      if (result != null) {
+                        setState(() {
+                          selectedFiles = result.files;
+                        });
+                      }
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Permission denied for file access.'),
+                        ),
+                      );
+                    }
+                  },
+                  child: const Text('Upload Documents'),
+                ),
+                const SizedBox(height: 12),
                 const Text(
-                  'Advocate details',
+                  'Selected Files:',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
                   ),
                 ),
-                const SizedBox(height: 12),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(25.0),
-                  ),
-                  child: TextFormField(
-                    controller: _mobileController,
-                    decoration: const InputDecoration(
-                      labelText: "Petitioner's advocate name",
-                      labelStyle: TextStyle(
-                        fontSize: 12,
-                      ),
-                      border: InputBorder.none,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 12.0),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter advocate name';
-                      }
-                      return null;
-                    },
-                  ),
+                const SizedBox(height: 8),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: selectedFiles.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(selectedFiles[index].name),
+                    );
+                  },
                 ),
                 const SizedBox(height: 12),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(25.0),
-                  ),
-                  child: TextFormField(
-                    controller: _mobileController,
-                    decoration: const InputDecoration(
-                      labelText: 'Advocate Code',
-                      labelStyle: TextStyle(
-                        fontSize: 12,
-                      ),
-                      border: InputBorder.none,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 12.0),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter advocate code';
-                      }
-                      return null;
-                    },
-                  ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      submitForm();
+                    }
+                  },
+                  child: const Text('Submit'),
                 ),
               ],
             ),
           ),
         ),
       ),
-      floatingActionButton: ElevatedButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const RespondentForm()),
-          );
+    );
+  }
+
+  void submitForm() async {
+    final Map<String, dynamic> requestBody = {
+      'caseType': _caseTypeController.text,
+      'petitionerName': _petitionerNameController.text,
+      'petitionerAge': _petitionerAgeController.text,
+      'petitionerLawyerName': _petitionerLawyerController.text,
+      'petitionerLawyerEmail': _petitionerLawyerEmailController.text,
+      'respondentName': _respondentNameController.text,
+      'respondentAge': _respondentAgeController.text,
+      'petitioneremail': widget.emailController.text, // Using emailController passed from parent
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(createToDoUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
         },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue,
-          elevation: 8.0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25.0),
-          ),
-        ),
-        child: const Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Next',
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-            Icon(
-              Icons.arrow_forward,
-              color: Colors.white,
-            ),
+        body: jsonEncode(requestBody),
+      );
+
+      if (response.statusCode == 200) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SuccessPage()),
+        );
+      } else {
+        throw Exception('Failed to submit form');
+      }
+    } catch (error) {
+      print('Error: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $error')),
+      );
+    }
+  }
+}
+
+class SuccessPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Success'),
+        backgroundColor: Colors.blue,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Icon(Icons.check_circle, color: Colors.green, size: 50),
+            SizedBox(height: 16),
+            Text('Form submitted successfully!',
+                style: TextStyle(fontSize: 20)),
           ],
         ),
       ),

@@ -31,10 +31,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
           // Handle navigation based on the selected tab
           switch (index) {
             case 0:
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LawyersListScreen()),
-              );
+             // Navigate to Settings screen
               break;
             case 1:
               // Navigate to Settings screen

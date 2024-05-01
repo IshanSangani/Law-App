@@ -4,6 +4,9 @@ import 'court.dart'; // Import your CourtPOV for reference
 import 'bottom_nav_bar.dart'; // Import the CustomBottomNavigationBar
 
 class LawyerScreen extends StatefulWidget {
+  final TextEditingController emailController;
+
+  const LawyerScreen({Key? key, required this.emailController}) : super(key: key);
   @override
   _LawyerScreenState createState() => _LawyerScreenState();
 }
