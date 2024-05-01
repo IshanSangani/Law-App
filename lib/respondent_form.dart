@@ -233,65 +233,6 @@ class _RespondentFormState extends State<RespondentForm> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 12,),
-                const Text(
-                  'Advocate details',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(25.0),
-                  ),
-                  child: TextFormField(
-                    controller: _mobileController,
-                    decoration: const InputDecoration(
-                      labelText: "Respondent's advocate name",
-                      labelStyle: TextStyle(
-                        fontSize: 12,
-                      ),
-                      border: InputBorder.none,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 12.0),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter advocate name';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(25.0),
-                  ),
-                  child: TextFormField(
-                    controller: _mobileController,
-                    decoration: const InputDecoration(
-                      labelText: 'Advocate Code',
-                      labelStyle: TextStyle(
-                        fontSize: 12,
-                      ),
-                      border: InputBorder.none,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 12.0),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter advocate code';
-                      }
-                      return null;
-                    },
-                  ),
-                ), // Add other text fields here
               ],
             ),
           ),

@@ -100,16 +100,24 @@ class _CaseFilingFormState extends State<CaseFilingForm> {
                 const SizedBox(height: 12),
                 ElevatedButton(
                   onPressed: () async {
-                    FilePickerResult? result =
-                        await FilePicker.platform.pickFiles(
-                      allowMultiple: true,
-                      type: FileType.custom,
-                      allowedExtensions: ['pdf', 'doc', 'docx'],
-                    );
-                    if (result != null) {
-                      setState(() {
-                        selectedFiles = result.files;
-                      });
+                    try {
+                      FilePickerResult? result =
+                          await FilePicker.platform.pickFiles(
+                        allowMultiple: true,
+                        type: FileType.custom,
+                        allowedExtensions: ['pdf', 'doc', 'docx'],
+                      );
+                      if (result != null) {
+                        setState(() {
+                          selectedFiles = result.files;
+                        });
+                      }
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Permission denied for file access.'),
+                        ),
+                      );
                     }
                   },
                   child: const Text('Upload Documents'),
