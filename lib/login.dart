@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'config.dart';
-import 'package:law_app/user_pov.dart';
+import 'package:law_app/lawyerpov.dart';
 import 'package:law_app/court.dart';
 import 'package:law_app/lawyers.dart';
 import 'package:law_app/sign_up.dart';
@@ -59,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
     if (role == 'lawyer') {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => UserPOV()),
+        MaterialPageRoute(builder: (context) => LawyerScreen()),
       );
     } else if (role == 'user') {
       Navigator.push(
