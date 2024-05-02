@@ -65,68 +65,76 @@ class _CaseDetailsPageState extends State<CaseDetailsPage> {
       appBar: AppBar(
         title: const Text('Case Details'),
         backgroundColor: Colors.blue,
+        shape: const ContinuousRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(25),
+            bottomRight: Radius.circular(25),
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
+          )
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Case Date:',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Text(
-              caseDate ?? 'Loading...',
-              style: TextStyle(
+              caseDate ?? 'N/A',
+              style: const TextStyle(
                 fontSize: 16,
               ),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Case Type:',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Text(
-              caseType ?? 'Loading...',
-              style: TextStyle(
+              caseType ?? 'N/A',
+              style: const TextStyle(
                 fontSize: 16,
               ),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Petitioner Name:',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Text(
-              petitionerName ?? 'Loading...',
-              style: TextStyle(
+              petitionerName ?? 'N/A',
+              style: const TextStyle(
                 fontSize: 16,
               ),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Petitioner Lawyer Name:',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Text(
-              petitionerLawyerName ?? 'Loading...',
-              style: TextStyle(
+              petitionerLawyerName ?? 'N/A',
+              style: const TextStyle(
                 fontSize: 16,
               ),
             ),

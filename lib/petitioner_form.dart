@@ -34,6 +34,14 @@ class _CaseFilingFormState extends State<CaseFilingForm> {
       appBar: AppBar(
         title: const Text('Case matter details'),
         backgroundColor: Colors.blue,
+        shape: const ContinuousRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(25),
+            bottomRight: Radius.circular(25),
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
+          )
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(

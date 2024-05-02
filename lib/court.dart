@@ -59,7 +59,16 @@ class _CourtPOVState extends State<CourtPOV> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Court Perspective'),
+        backgroundColor: Colors.blue,
+        title: Text('Cases Priority'),
+        shape: const ContinuousRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(25),
+            bottomRight: Radius.circular(25),
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
+          )
+        ),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.refresh),

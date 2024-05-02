@@ -20,56 +20,60 @@ class _SignUpPageState extends State<SignUpPage> {
   String? _selectedRole;
 
   void registerUser() async {
-  try {
-    if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty && _selectedRole != null) {
-      var regBody = {
-        "email": emailController.text,
-        "password": passwordController.text,
-        "role": _selectedRole, // Pass the selected role
-      };
+    try {
+      if (emailController.text.isNotEmpty &&
+          passwordController.text.isNotEmpty &&
+          _selectedRole != null) {
+        var regBody = {
+          "email": emailController.text,
+          "password": passwordController.text,
+          "role": _selectedRole, // Pass the selected role
+        };
 
-      var response = await http.post(
-        Uri.parse(registration),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(regBody),
-      );
+        var response = await http.post(
+          Uri.parse(registration),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(regBody),
+        );
 
-      if (response.statusCode == 200) {
-        var jsonResponse = jsonDecode(response.body);
-        if (jsonResponse['status']) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+        if (response.statusCode == 200) {
+          var jsonResponse = jsonDecode(response.body);
+          if (jsonResponse['status']) {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => LoginPage()));
+          } else {
+            // Display the error message from the backend
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(jsonResponse['message']),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
         } else {
-          // Display the error message from the backend
+          // Display a generic error message
+          var errorMessage = 'Something went wrong. Please try again.';
+          if (response.body.isNotEmpty) {
+            var jsonResponse = jsonDecode(response.body);
+            errorMessage = jsonResponse['message'] ?? errorMessage;
+          }
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(jsonResponse['message']),
+              content: Text(errorMessage),
               backgroundColor: Colors.red,
             ),
           );
         }
       } else {
-        // Display a generic error message
-        var errorMessage = 'Something went wrong. Please try again.';
-        if (response.body.isNotEmpty) {
-          var jsonResponse = jsonDecode(response.body);
-          errorMessage = jsonResponse['message'] ?? errorMessage;
-        }
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(errorMessage),
-            backgroundColor: Colors.red,
-          ),
-        );
+        setState(() {
+          _isNotValidate = true;
+        });
       }
-    } else {
-      setState(() {
-        _isNotValidate = true;
-      });
+    } catch (e) {
+      print("Error: $e");
     }
-  } catch (e) {
-    print("Error: $e");
   }
-}
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -77,9 +81,16 @@ class _SignUpPageState extends State<SignUpPage> {
         body: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("images/BG.jpg"),
+              fit: BoxFit.cover,
+            ),
             gradient: LinearGradient(
-              colors: [Color.fromARGB(255, 201, 198, 197), Color.fromARGB(255, 184, 182, 180)],
+              colors: [
+                Color.fromARGB(255, 201, 198, 197),
+                Color.fromARGB(255, 184, 182, 180)
+              ],
               begin: FractionalOffset.topLeft,
               end: FractionalOffset.bottomCenter,
               stops: [0.0, 0.8],
@@ -91,8 +102,9 @@ class _SignUpPageState extends State<SignUpPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  HeightBox(10),
-                  "CREATE YOUR ACCOUNT".text.size(22).yellow100.make(),
+                  const HeightBox(10),
+                  "CREATE YOUR ACCOUNT".text.size(22).blue500.bold.make(),
+
                   // Cards for user, lawyer, and court selection
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -107,7 +119,9 @@ class _SignUpPageState extends State<SignUpPage> {
                           },
                           child: Card(
                             elevation: 3,
-                            color: _selectedRole == 'user' ? Colors.blue : Colors.white,
+                            color: _selectedRole == 'user'
+                                ? Colors.blue
+                                : Colors.white,
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Column(
@@ -115,13 +129,17 @@ class _SignUpPageState extends State<SignUpPage> {
                                 children: [
                                   Icon(
                                     Icons.person,
-                                    color: _selectedRole == 'user' ? Colors.white : Colors.blue,
+                                    color: _selectedRole == 'user'
+                                        ? Colors.white
+                                        : Colors.blue,
                                   ),
                                   const SizedBox(height: 8.0),
                                   Text(
                                     'User',
                                     style: TextStyle(
-                                      color: _selectedRole == 'user' ? Colors.white : Colors.blue,
+                                      color: _selectedRole == 'user'
+                                          ? Colors.white
+                                          : Colors.blue,
                                     ),
                                   ),
                                 ],
@@ -141,7 +159,9 @@ class _SignUpPageState extends State<SignUpPage> {
                           },
                           child: Card(
                             elevation: 3,
-                            color: _selectedRole == 'lawyer' ? Colors.blue : Colors.white,
+                            color: _selectedRole == 'lawyer'
+                                ? Colors.blue
+                                : Colors.white,
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Column(
@@ -149,13 +169,17 @@ class _SignUpPageState extends State<SignUpPage> {
                                 children: [
                                   Icon(
                                     Icons.gavel,
-                                    color: _selectedRole == 'lawyer' ? Colors.white : Colors.blue,
+                                    color: _selectedRole == 'lawyer'
+                                        ? Colors.white
+                                        : Colors.blue,
                                   ),
                                   const SizedBox(height: 8.0),
                                   Text(
                                     'Lawyer',
                                     style: TextStyle(
-                                      color: _selectedRole == 'lawyer' ? Colors.white : Colors.blue,
+                                      color: _selectedRole == 'lawyer'
+                                          ? Colors.white
+                                          : Colors.blue,
                                     ),
                                   ),
                                 ],
@@ -175,7 +199,9 @@ class _SignUpPageState extends State<SignUpPage> {
                           },
                           child: Card(
                             elevation: 3,
-                            color: _selectedRole == 'court' ? Colors.blue : Colors.white,
+                            color: _selectedRole == 'court'
+                                ? Colors.blue
+                                : Colors.white,
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Column(
@@ -183,13 +209,17 @@ class _SignUpPageState extends State<SignUpPage> {
                                 children: [
                                   Icon(
                                     Icons.gavel,
-                                    color: _selectedRole == 'court' ? Colors.white : Colors.blue,
+                                    color: _selectedRole == 'court'
+                                        ? Colors.white
+                                        : Colors.blue,
                                   ),
                                   const SizedBox(height: 8.0),
                                   Text(
                                     'Court',
                                     style: TextStyle(
-                                      color: _selectedRole == 'court' ? Colors.white : Colors.blue,
+                                      color: _selectedRole == 'court'
+                                          ? Colors.white
+                                          : Colors.blue,
                                     ),
                                   ),
                                 ],
@@ -206,13 +236,15 @@ class _SignUpPageState extends State<SignUpPage> {
                     controller: emailController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
+                      prefixIcon: IconButton(
+                          onPressed: () {}, icon: const Icon(Icons.email)),
                       filled: true,
                       fillColor: Colors.white,
                       errorStyle: TextStyle(color: Colors.white),
                       errorText: _isNotValidate ? "Enter Proper Info" : null,
                       hintText: "Email",
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        borderRadius: BorderRadius.all(Radius.circular(25.0)),
                       ),
                     ),
                   ).p4().px24(),
@@ -220,15 +252,8 @@ class _SignUpPageState extends State<SignUpPage> {
                     controller: passwordController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.copy),
-                        onPressed: () {
-                          final data = ClipboardData(text: passwordController.text);
-                          Clipboard.setData(data);
-                        },
-                      ),
                       prefixIcon: IconButton(
-                        icon: Icon(Icons.password),
+                        icon: const Icon(Icons.password_rounded),
                         onPressed: () {
                           String passGen = generatePassword();
                           passwordController.text = passGen;
@@ -237,28 +262,35 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       filled: true,
                       fillColor: Colors.white,
-                      errorStyle: TextStyle(color: Colors.white),
+                      errorStyle: const TextStyle(color: Colors.white),
                       errorText: _isNotValidate ? "Enter Proper Info" : null,
                       hintText: "Password",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(25.0)),
                       ),
                     ),
                   ).p4().px24(),
-                  HStack([
-                    GestureDetector(
-                      onTap: () => registerUser(),
-                      child: VxBox(child: "Register".text.white.makeCentered().p16()).green600.roundedLg.make().px16().py16(),
-                    ),
-                  ]),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () => registerUser(),
+                        child: VxBox(
+                          child: "Register".text.white.makeCentered().p16(),
+                        ).blue500.roundedLg.make().px12().py12(),
+                      ),
+                    ],
+                  ),
+
                   GestureDetector(
                     onTap: () {
                       print("Sign In");
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => LoginPage()));
                     },
                     child: HStack([
                       "Already Registered?".text.make(),
-                      " Sign In".text.white.make(),
+                      " Sign In".text.blue500.make(),
                     ]).centered(),
                   ),
                 ],

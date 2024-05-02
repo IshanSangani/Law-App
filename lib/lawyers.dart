@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:law_app/login.dart';
 import 'package:law_app/user_pov.dart';
 import 'chatbot.dart';
 import 'bottom_nav_bar.dart';
 import 'petitioner_form.dart';
+import 'chat.dart';
 
 class Professional {
   final String name;
@@ -25,7 +27,8 @@ class Professional {
 class LawyersListScreen extends StatefulWidget {
   final TextEditingController emailController;
 
-  const LawyersListScreen({Key? key, required this.emailController}) : super(key: key);
+  const LawyersListScreen({Key? key, required this.emailController})
+      : super(key: key);
 
   @override
   _LawyersListScreenState createState() => _LawyersListScreenState();
@@ -38,7 +41,7 @@ class _LawyersListScreenState extends State<LawyersListScreen> {
     Professional(
       name: 'Ishan Sangani',
       category: 'Lawyer',
-      photoUrl: 'assets/john_doe.jpg',
+      photoUrl: 'images/m_lawyer.jpg',
       rating: 4.8,
       experienceYears: 10,
       contact: '+1 123-456-7890',
@@ -46,7 +49,7 @@ class _LawyersListScreenState extends State<LawyersListScreen> {
     Professional(
       name: 'Prachiti Dahale',
       category: 'Lawyer',
-      photoUrl: 'assets/john_doe.jpg',
+      photoUrl: 'images/f_lawyer.jpg',
       rating: 4.8,
       experienceYears: 8,
       contact: '+1 987-654-3210',
@@ -54,7 +57,7 @@ class _LawyersListScreenState extends State<LawyersListScreen> {
     Professional(
       name: 'Atharva Dharmadhikari',
       category: 'Lawyer',
-      photoUrl: 'assets/john_doe.jpg',
+      photoUrl: 'images/m_lawyer.jpg',
       rating: 4.8,
       experienceYears: 12,
       contact: '+1 555-123-4567',
@@ -62,7 +65,7 @@ class _LawyersListScreenState extends State<LawyersListScreen> {
     Professional(
       name: 'Pushpak Deore',
       category: 'Lawyer',
-      photoUrl: 'assets/john_doe.jpg',
+      photoUrl: 'images/m_lawyer.jpg',
       rating: 4.8,
       experienceYears: 15,
       contact: '+1 999-888-7777',
@@ -75,6 +78,14 @@ class _LawyersListScreenState extends State<LawyersListScreen> {
       appBar: AppBar(
         title: const Text('Popular Lawyers'),
         backgroundColor: Colors.blue,
+        shape: const ContinuousRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(25),
+            bottomRight: Radius.circular(25),
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
+          )
+        ),
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
@@ -94,14 +105,16 @@ class _LawyersListScreenState extends State<LawyersListScreen> {
           padding: EdgeInsets.zero,
           children: [
             UserAccountsDrawerHeader(
-              accountName: Text('Your Name'), // Replace with actual user name
-              accountEmail: Text(widget.emailController.text), // Replace with email from the controller
-              currentAccountPicture: CircleAvatar(
+              accountName:
+                  const Text('Your Name'), // Replace with actual user name
+              accountEmail: Text(widget.emailController
+                  .text), // Replace with email from the controller
+              currentAccountPicture: const CircleAvatar(
                 backgroundImage: AssetImage(
-                    'assets/profile_picture.jpg'), // Replace with actual profile picture
+                    'images/profile_pic.jpeg'), // Replace with actual profile picture
                 backgroundColor: Colors.white,
               ),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.blue,
               ),
             ),
@@ -120,7 +133,9 @@ class _LawyersListScreenState extends State<LawyersListScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => CaseFilingForm(emailController: widget.emailController,)),
+                      builder: (context) => CaseFilingForm(
+                            emailController: widget.emailController,
+                          )),
                 );
               },
             ),
@@ -132,7 +147,10 @@ class _LawyersListScreenState extends State<LawyersListScreen> {
                 // Implement your filings screen navigation
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CaseDetailsPage(emailController: widget.emailController,)),
+                  MaterialPageRoute(
+                      builder: (context) => CaseDetailsPage(
+                            emailController: widget.emailController,
+                          )),
                 );
               },
             ),
@@ -147,7 +165,7 @@ class _LawyersListScreenState extends State<LawyersListScreen> {
               leading: const Icon(Icons.exit_to_app),
               title: const Text('Logout'),
               onTap: () {
-                // Implement logout functionality
+                Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()),);
               },
             ),
           ],
@@ -157,37 +175,57 @@ class _LawyersListScreenState extends State<LawyersListScreen> {
         itemCount: professionals.length,
         itemBuilder: (context, index) {
           final professional = professionals[index];
-          return Card(
-            elevation: 3,
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                    color:
-                        Colors.transparent), // Set border color to transparent
-              ),
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: AssetImage(professional.photoUrl),
+          return GestureDetector(
+            onTap: () {
+              // Navigate to chat page with professional information
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChatPage(professional: professional),
                 ),
-                title: Text(professional.name),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(professional.category),
-                    Row(
-                      children: [
-                        const Icon(Icons.star, color: Colors.yellow),
-                        Text('${professional.rating}'),
-                      ],
-                    ),
-                    Text('Experience: ${professional.experienceYears} years'),
-                    Text('Contact: ${professional.contact}'),
-                  ],
+              );
+            },
+            child: Card(
+              elevation: 3,
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.transparent,
+                  ),
                 ),
-                onTap: () {
-                  // Handle professional selection (e.g., navigate to details screen)
-                },
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: AssetImage(professional.photoUrl),
+                  ),
+                  title: Text(professional.name),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(professional.category),
+                      Row(
+                        children: [
+                          const Icon(Icons.star, color: Colors.yellow),
+                          Text('${professional.rating}'),
+                        ],
+                      ),
+                      Text('Experience: ${professional.experienceYears} years'),
+                      Text('Contact: ${professional.contact}'),
+                    ],
+                  ),
+                  trailing: IconButton(
+                    icon: Icon(Icons.chat),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ChatPage(professional: professional),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ),
             ),
           );

@@ -62,7 +62,16 @@ class _LawyerScreenState extends State<LawyerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lawyer Screen'),
+        backgroundColor: Colors.blue,
+        title: Text('Cases'),
+        shape: const ContinuousRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(25),
+            bottomRight: Radius.circular(25),
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
+          )
+        ),
       ),
       body: Column(
         children: [
